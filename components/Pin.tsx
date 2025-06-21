@@ -2,13 +2,14 @@ import { View, Image, StyleSheet, Pressable } from "react-native";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
+import { useLike } from '@/components/LikeContext'; // ❤️ import
 
 const Pin = (props) => {
   const { pin } = props;
   const [ratio, setRatio] = useState(1);
   const router = useRouter();
 
-  const onLike = () => {};
+  const { isLiked, toggleLike } = useLike(); // ❤️ Context-Hook
 
   useEffect(() => {
     if (pin.image) {
@@ -29,11 +30,14 @@ const Pin = (props) => {
         />
       </Pressable>
 
-      <Pressable onPress={onLike} style={styles.heartBtn}>
-        <AntDesign name="hearto" size={25} color="black" />
+      <Pressable onPress={() => toggleLike(pin.id)} style={styles.heartBtn}>
+        <AntDesign
+          name={isLiked(pin.id) ? "heart" : "hearto"}
+          size={25}
+          color={isLiked(pin.id) ? "red" : "black"}
+          style={{ position: 'relative', top: 1 }}
+        />
       </Pressable>
-
-      {/* <Text style={styles.title}>{pin.title}</Text> */}
     </View>
   );
 };
@@ -43,12 +47,6 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 4,
   },
-  /*title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    margin: 10,
-    color: 'white',
-  },*/
   image: {
     width: "100%",
     borderRadius: 15,
@@ -57,7 +55,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#D3CFD4",
     position: 'absolute',
     bottom: 10,
-    right: 10,
+    right: 12,
     padding: 5,
     borderRadius: 50,
   },

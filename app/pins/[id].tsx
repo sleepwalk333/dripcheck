@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import { useEffect, useState } from 'react';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import { useLike } from '@/components/LikeContext'; // ❤️ importiert
 
 const PinScreen = () => {
   return (
@@ -20,6 +22,8 @@ const PinScreenContent = () => {
 
   const [pin, setPin] = useState<any>(null);
   const [ratio, setRatio] = useState(1);
+
+  const { isLiked, toggleLike } = useLike(); // ❤️ Context nutzen
 
   useEffect(() => {
     const pins = require('@/assets/data/pins').default;
@@ -45,7 +49,17 @@ const PinScreenContent = () => {
       <View style={styles.root}>
         <View style={[styles.imageWrapper, { aspectRatio: ratio }]}>
           <Image source={{ uri: pin.image }} style={styles.image} />
+
+          <Pressable onPress={() => toggleLike(pin.id)} style={styles.heartBtn}>
+            <AntDesign
+              name={isLiked(pin.id) ? "heart" : "hearto"}
+              size={40}
+              color={isLiked(pin.id) ? "red" : "black"}
+              style={{ position: 'relative', top: 1.5 }}
+            />
+          </Pressable>
         </View>
+
         <Text style={styles.title}>{pin.title}</Text>
       </View>
 
@@ -74,6 +88,7 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     overflow: 'hidden',
     backgroundColor: 'black',
+    position: 'relative',
   },
   image: {
     width: '100%',
@@ -100,6 +115,14 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     resizeMode: 'contain',
+  },
+  heartBtn: {
+    backgroundColor: '#D3CFD4',
+    position: 'absolute',
+    bottom: 15,
+    right: 18,
+    padding: 5,
+    borderRadius: 50,
   },
 });
 
