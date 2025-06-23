@@ -6,8 +6,16 @@ import MasonryList from '@/components/MasonryList';
 import { Feather } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
+import { useLike } from '@/components/LikeContext'; // ❤️
 
 export default function Profile() {
+  const { likedPins } = useLike(); // ❤️ Zugriff auf Like-Daten
+
+  // Nur gelikte Pins in Reihenfolge der Likes (neueste oben)
+  const filteredPins = likedPins
+    .map(id => pins.find(pin => pin.id === id))
+    .filter((pin): pin is typeof pins[number] => !!pin); // fallback für evtl. ungültige IDs
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -18,9 +26,8 @@ export default function Profile() {
             size={24}
             color="white"
             style={styles.icon}
-            />
+          />
         </View>
-
 
         <Image 
           source={{
@@ -35,7 +42,7 @@ export default function Profile() {
         <Text style={styles.subtitle}>Saved Items</Text>
       </View>
 
-      <MasonryList pins={pins} />
+      <MasonryList pins={filteredPins} />
     </ScrollView>
   );
 }

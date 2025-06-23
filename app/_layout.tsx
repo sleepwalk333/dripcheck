@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
-import { LikeProvider } from '@/components/LikeContext'; // 👈 LikeProvider importieren
+import { LikeProvider } from '@/components/LikeContext'; // LikeProvider importieren
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -47,7 +47,7 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <LikeProvider> {/* 👈 LikeProvider um die ganze App */}
+    <LikeProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

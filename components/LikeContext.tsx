@@ -1,29 +1,31 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 type LikeContextType = {
-  likedPins: Set<string>;
+  likedPins: string[];
   toggleLike: (id: string) => void;
   isLiked: (id: string) => boolean;
 };
 
 const LikeContext = createContext<LikeContextType | undefined>(undefined);
 
-export const LikeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [likedPins, setLikedPins] = useState<Set<string>>(new Set());
+type LikeProviderProps = {
+  children: ReactNode;
+};
+
+export const LikeProvider = ({ children }: LikeProviderProps) => {
+  const [likedPins, setLikedPins] = useState<string[]>([]);
 
   const toggleLike = (id: string) => {
     setLikedPins(prev => {
-      const updated = new Set(prev);
-      if (updated.has(id)) {
-        updated.delete(id);
+      if (prev.includes(id)) {
+        return prev.filter(pinId => pinId !== id); // entfernen
       } else {
-        updated.add(id);
+        return [id, ...prev]; // hinzufügen oben (neueste zuerst)
       }
-      return updated;
     });
   };
 
-  const isLiked = (id: string) => likedPins.has(id);
+  const isLiked = (id: string) => likedPins.includes(id);
 
   return (
     <LikeContext.Provider value={{ likedPins, toggleLike, isLiked }}>
@@ -32,7 +34,7 @@ export const LikeProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const useLike = () => {
+export const useLike = (): LikeContextType => {
   const context = useContext(LikeContext);
   if (!context) {
     throw new Error('useLike must be used within a LikeProvider');
