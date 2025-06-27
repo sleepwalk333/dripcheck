@@ -9,8 +9,9 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import Constants from 'expo-constants';
 
-const OPENAI_API_KEY = "REMOVED";
+const OPENAI_API_KEY = Constants.expoConfig?.extra?.OPENAI_API_KEY;
 
 export default function ChatScreen() {
   const [messages, setMessages] = useState([
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
   },
   user: {
     alignSelf: 'flex-end',
-    backgroundColor: '#1e90ff',
+    backgroundColor: '#888',
   },
   bot: {
     alignSelf: 'flex-start',
@@ -125,10 +126,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#111',
     borderRadius: 10,
     paddingHorizontal: 10,
-    height: 42, // gleiche Höhe wie der Button
+    height: 42,
   },
   button: {
-    backgroundColor: '#1e90ff',
+    backgroundColor: '#333', // <- Neue Farbe wie Bot-Bubble
     paddingHorizontal: 16,
     justifyContent: 'center',
     alignItems: 'center',
